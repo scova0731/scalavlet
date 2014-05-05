@@ -1,0 +1,23 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="scalavlet-example-simple:war exploded">
+    <output-path>$PROJECT_DIR$/target/scalavlet-example-simple-1.0-SNAPSHOT</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="scalavlet-example-simple/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="scalavlet-example-simple" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: org.scalavlet:scalavlet-core:1.0-SNAPSHOT" />
+          <element id="library" level="project" name="Maven: org.scala-lang:scala-library:2.10.3" />
+          <element id="library" level="project" name="Maven: org.scalatra.rl:rl_2.10:0.4.9" />
+          <element id="library" level="project" name="Maven: com.googlecode.juniversalchardet:juniversalchardet:1.0.3" />
+          <element id="library" level="project" name="Maven: eu.medsea.mimeutil:mime-util:2.1.3" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.6" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-log4j12:1.7.6" />
+          <element id="library" level="project" name="Maven: log4j:log4j:1.2.17" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
