@@ -1,7 +1,7 @@
 package org.scalavlet.examples.simple
 
 import scala.xml.{Node, Text}
-import org.scalavlet.Scalavlet
+import org.scalavlet.{Request, Scalavlet}
 
 object Template {
 
@@ -51,11 +51,11 @@ object Template {
 
 class PageServlet extends Scalavlet {
 
-  private def displayPage(title:String, content:Seq[Node]) =
-    Template.page(title, content, url(_, includeServletPath = false))
+  private def displayPage(request:Request, title:String, content:Seq[Node]) =
+    Template.page(title, content, url(request, _, includeServletPath = false))
 
   get("/") { q =>
-    displayPage("Scalavlet: Hello World",
+    displayPage(q, "Scalavlet: Hello World",
       <h2>Hello world!</h2>
         <p>Referer: { (q referrer) map { Text(_) } getOrElse { <i>none</i> }}</p>
         <pre>Route: /</pre>)
@@ -71,7 +71,7 @@ class PageServlet extends Scalavlet {
   }
 
   get("/date/:year/:month/:day") { request =>
-    displayPage("Scalavlet: Date Example",
+    displayPage(request, "Scalavlet: Date Example",
       <ul>
         <li>Year: {request.params("year")}</li>
         <li>Month: {request.params("month")}</li>
@@ -82,7 +82,7 @@ class PageServlet extends Scalavlet {
   }
 
   get("/form") { request =>
-    displayPage("Scalavlet: Form Post Example",
+    displayPage(request, "Scalavlet: Form Post Example",
       <form action={url(request, "/form-post")} method='POST'>
         Post something: <input name="submission" type='text'/>
         <input type='submit'/>
@@ -92,7 +92,7 @@ class PageServlet extends Scalavlet {
   }
 
   post("/form-post") { request =>
-    displayPage("Scalavlet: Form Post Result",
+    displayPage(request, "Scalavlet: Form Post Result",
       <p>You posted: {request.params("submission")}</p>
         <pre>Route: /post</pre>
     )
@@ -136,7 +136,7 @@ class PageServlet extends Scalavlet {
 
 
   get("/flash-map/form") { request =>
-    displayPage("Scalavlet: Flash Map Example",
+    displayPage(request, "Scalavlet: Flash Map Example",
       <span>Supports the post-then-redirect pattern</span><br />
         <form method="post">
           <label>Message: <input type="text" name="message" /></label><br />

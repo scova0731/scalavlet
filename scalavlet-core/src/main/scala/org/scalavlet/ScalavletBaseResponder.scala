@@ -177,7 +177,10 @@ class ScalavletBaseResponder(
     case _: Unit | Unit | null =>
       Unit
 
-    case lazyAction:Action =>
+//    case lazyAction: ResponseAction =>
+//      lazyAction(response)
+
+    case lazyAction: Action =>
       lazyAction()
 
     case x =>

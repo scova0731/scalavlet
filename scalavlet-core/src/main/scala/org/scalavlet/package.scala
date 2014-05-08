@@ -40,6 +40,7 @@ package object scalavlet
 
   type Action = () => Any
   type Action2 = Request => Any
+  type ResponseAction = Response => Any
 
 
   //Base

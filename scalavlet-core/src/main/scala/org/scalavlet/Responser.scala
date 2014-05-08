@@ -11,6 +11,10 @@ private object Helpers {
 
 import Helpers._
 
+object JsonOption extends Enumeration {
+  val DOUBLE, BIGDECIMAL = Value
+}
+
 object Responding {
   
   val ok = S200_Ok
@@ -24,14 +28,34 @@ object Responding {
   val methodNotAllowed = S405_MethodNotAllowed
   val internalServerError = S500_InternalServerError
 
-  def html(body: Any) =
+  def html(body: Any):Responser =
     Responser(status(200, ""), body, Map("Content-Type" -> "text/html"))
 
-  def json(body: Any) =
-    Responser(status(200, ""), body, Map("Content-Type" -> "application/json"))
-
-  def plain(body: Any) =
+  def plain(body: Any, option:JsonOption.Value = JsonOption.BIGDECIMAL):Responser =
     Responser(status(200, ""), body, Map("Content-Type" -> "text/plain"))
+
+
+  def json(body: Any, option:JsonOption.Value = JsonOption.BIGDECIMAL):Responser = {
+    import org.json4s._
+    import org.json4s.jackson.JsonMethods._
+    import org.json4s.JsonDSL._
+    implicit val formats = DefaultFormats
+
+    val renderedBody = option match {
+      case JsonOption.BIGDECIMAL =>
+        import org.json4s.JsonDSL.WithBigDecimal._
+        //r:Response => mapper.writeValue(r.writer, body)  //
+        compact(render(Extraction.decompose(body)))
+      case JsonOption.DOUBLE =>
+        import org.json4s.JsonDSL.WithDouble._
+        //r:Response => mapper.writeValue(r.writer, body) //compact(render(body))
+        compact(render(Extraction.decompose(body)))
+
+    }
+
+    Responser(status(200, ""), renderedBody, Map("Content-Type" -> "application/json"))
+  }
+
 
   def redirect(location: String, message: String = "", permanent: Boolean = false): Responser = {
     val msg = if (message == "")

@@ -1,6 +1,8 @@
 package org.scalavlet
 
 import org.scalavlet.utils.{StringHelpers, Cacheable, MultiParams, Params}
+import org.scalavlet.richer.RichString
+import org.scalavlet.support.JsonSupport
 
 import scala.collection.immutable.DefaultMap
 import scala.collection.JavaConverters._
@@ -13,10 +15,10 @@ import javax.servlet.http.HttpSession
 
 import StringHelpers._
 import scala.util.control.Exception._
-import org.scalavlet.richer.RichString
+import scala.reflect.ClassTag
 
 
-class Request(r: SvRequest, response:SvResponse) extends Cacheable {
+class Request(r: SvRequest, response:SvResponse) extends Cacheable with JsonSupport {
 
   def underlying:SvRequest = r
 
