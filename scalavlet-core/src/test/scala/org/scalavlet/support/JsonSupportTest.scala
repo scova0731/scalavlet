@@ -19,24 +19,36 @@ class JsonSupportTest extends FunSuite with ScalatraTestHelper {
 
   case class Amazon(name:String, books:List[Book]) {
     override def toString = {
-      s"name=$name, books=[${books.mkString(", ")}]"
+      s"name=$name, books=[${books.mkString("|")}]"
     }
   }
 
   mount(new Scalavlet {
     post("/book-raw") { q =>
-      val body = q.parseJsonBody[Book]
+      val body = q.tryJsonBody[Book].right.get
       body
     }
 
     post("/book") { q =>
-      val body = q.parseJsonBody[Book]
+      val body = q.tryJsonBody[Book].right.get
       respond.json(body)
     }
 
+    post("/amazon-raw") { q =>
+      val body = q.tryJsonBody[Amazon].right.get
+      body
+    }
+
     post("/amazon") { q =>
-      val body = q.parseJsonBody[Amazon]
+      val body = q.tryJsonBody[Amazon].right.get
       respond.json(body)
+    }
+
+    post("/invalid") { q =>
+      q.tryJsonBody[Amazon] match {
+        case Left(msg) => println(msg);false
+        case Right(body) => body
+      }
     }
   }, "/*")
 
@@ -60,10 +72,24 @@ class JsonSupportTest extends FunSuite with ScalatraTestHelper {
     }
   }
 
+  test("parent-child case classes") {
+    post("/amazon-raw", """{"name":"Shakespeare", "books":[{"title":"Hamlet","id":12}, {"title":"King Lear","id":15}]}""") { response =>
+      response.body should equal ("""name=Shakespeare, books=[title=Hamlet, id=12|title=King Lear, id=15]""")
+    }
+  }
 
-//  test("parse parent-child case classes") {
-//    post("/json", "") { response =>
-//      response.body should equal ("")
-//    }
-//  }
+  test("parent-child case classes and convert back to JSON again") {
+    val json = """{"name":"Shakespeare","books":[{"title":"Hamlet","id":12},{"title":"King Lear","id":15}]}"""
+    post("/amazon", json) { response =>
+      response.body should equal (json)
+    }
+  }
+
+  test("invalid JSON") {
+    val json = """{"name":"Shakespeare","""
+    post("/invalid", json) { response =>
+      response.body should equal ("false")
+    }
+  }
+
 }

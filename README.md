@@ -20,14 +20,14 @@ class Bootstrap extends ScalavletBootable {
 
 Scalavlet is aiming to be a simple and easy-to-understand web framework on top of
 Servlet specification. Already a lot of elegant and sophisticated web frameworks
-written by Scala, but sometimes they are too elegant for Scala new comers and daily
+written by Scala are there, but sometimes they are too elegant for Scala new comers or daily
 usages. That's the motivation why I'm trying to re-invent the wheel.
 
 Scalavlet will stick to a web ONLY framework. You can integrate with any kind of
 view frameworks and persistence frameworks. We may provide several integration samples.
 
 This project is highly affected by [Scalatra](http://scalatra.org/) and [Finatra](http://finatra.info/).
-I would like to say to thank them so much. `m(_ _)m`
+I would like to say to thank so much to them. `m(_ _)m`
 
 
 
@@ -62,7 +62,7 @@ Roadmap
 
 - Basic Sinatra like routing : DONE
 - No xml configuration : DONE
-- Integrated JSON input and output
+- Integrated JSON input and output : DONE
 - Integrated Typesafe/Config configuration
 - Simple sample application
 - Refactoring and testing

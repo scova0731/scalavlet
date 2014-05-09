@@ -25,26 +25,6 @@ class ScalavletBaseResponder(
   protected var errorHandler: ErrorHandler = { case t => throw t }
 
 
-  /**
-   * Executes routes in the context of the current request and response.
-   *
-   * DEL $ 1. Executes each before filter with `runFilters`.
-
-   * $ 2. Executes the routes in the route registry with `runRoutes` for
-   * the request's method.
-   * a. The result of runRoutes becomes the _action result_.
-   * b. If no route matches the requested method, but matches are
-   * found for other methods, then the `doMethodNotAllowed` hook is
-   * run with each matching method.
-   * c. If no route matches any method, then the `doNotFound` hook is
-   * run, and its return value becomes the action result.
-   * $ 3. If an exception is thrown during the before filters or the route
-   * $    actions, then it is passed to the `errorHandler` function, and its
-   * $    result becomes the action result.
-
-   * DEL $ 4. Executes the after filters with `runFilters`.
-   * $ 5. The action result is passed to `renderResponse`.
-   */
   def executeRoutes(): Unit = {
 
     var result: Any = null
@@ -65,9 +45,6 @@ class ScalavletBaseResponder(
 
     if (!rendered) renderResponse(result)
   }
-
-//  private[scalavlet] def runCallbacks(data: Try[Any]): Unit =
-//    callbacks.reverse foreach (_(data))
 
 
   private[scalavlet] def cradleHalt(body: () => Unit, error: Throwable => Unit): Unit =
@@ -176,9 +153,6 @@ class ScalavletBaseResponder(
     // If an action returns Unit, it assumes responsibility for the response
     case _: Unit | Unit | null =>
       Unit
-
-//    case lazyAction: ResponseAction =>
-//      lazyAction(response)
 
     case lazyAction: Action =>
       lazyAction()
