@@ -1,19 +1,19 @@
 Scalavlet
 =========
 
-a tiny Scala based web application framework on top of servlet container
+yet another tiny Sinatra like Scala web application framework on top of servlet specification
 
 
 ```Scala
-class SampleServlet extends Scalavlet {
+object SampleServlet extends Scalavlet {
   get("/ping") { request =>
     "pong"
   }
 }
 
 class Bootstrap extends ScalavletBootable {
-  def onStart (context: Context): Unit = {
-    context.mount(new SampleServlet, "/")
+  def onStart (ctx: Context): Unit = {
+    ctx.mount(SampleServlet, "/")
   }
 }
 ```
@@ -63,25 +63,26 @@ Roadmap
 - Basic Sinatra like routing : DONE
 - No xml configuration : DONE
 - Integrated JSON input and output : DONE
-- Integrated Typesafe/Config configuration
-- Simple sample application
+- Integrated Typesafe/Config configuration : DONE
+- Logging
+- Sample application
 - Refactoring and testing
 
 ## Future plans
 
 - Authentication support
-- Servlet 3.1 Web Socket/Async. support
 - Session and Cookie management
 - File uploading
-- XSS protection
-- I18n/L10n
-- Swagger support
-- Sample applications (JNDI, Slick, view libraries, Jolokia/hawt.io ...)
-- Multi version builds and CI with Cloudbees
 - SBT/Gradle builds in addition to Maven
+- More sample applications (JNDI, Slick, view libraries, Jolokia/hawt.io ...)
+- I18n/L10n
+- XSS protection
+- Swagger support
 - CSRF/XSRF
 - SSL
 - CORS
+- Multi version builds and CI with Cloudbees
+- Servlet 3.1 Web Socket/Async. support
 
 
 

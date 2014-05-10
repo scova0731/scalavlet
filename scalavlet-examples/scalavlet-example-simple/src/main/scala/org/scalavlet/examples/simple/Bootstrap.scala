@@ -1,14 +1,14 @@
 package org.scalavlet.examples.simple
 
-import org.scalavlet.ScalavletBootable
+import org.scalavlet.Bootable
 import org.scalavlet.Context
 
 
-class Bootstrap extends ScalavletBootable {
+class Bootstrap extends Bootable {
 
 
   override def onStart (context: Context): Unit = {
-    context.mount(new PageServlet, "/")
+    context.mount(PageServlet, "/")
   }
 
   override def onStop (context: Context): Unit = {

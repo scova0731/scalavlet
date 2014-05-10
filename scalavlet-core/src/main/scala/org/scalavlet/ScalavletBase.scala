@@ -11,6 +11,7 @@ import scala.collection.immutable.DefaultMap
 import scala.collection.JavaConverters._
 import java.util.zip.GZIPOutputStream
 import java.io.PrintWriter
+import scala.reflect.ClassTag
 
 //import reflectiveCalls for Config trait
 import scala.language.reflectiveCalls
@@ -37,10 +38,6 @@ trait ScalavletBase
    * The routes registered in this kernel.
    */
   protected lazy val routes = new RouteRegistry
-
-
-  //TODO implement callback feature
-  //protected var callbacks = new mutable.ArrayBuffer[Callback]()
 
 
   /**
@@ -71,10 +68,11 @@ trait ScalavletBase
     def initParameters: Map[String, String]
   }
 
+
   /**
    * The configuration, typically a ServletConfig or FilterConfig.
    */
-  var config: Config = _
+  var servletConfig: Config = _
 
 
 
@@ -100,9 +98,29 @@ trait ScalavletBase
 
 
   /**
+   * Return the configuration singleton
+   */
+  def config:Configuration = Configuration()
+
+
+//  /**
+//   * EXPERIMENTAL
+//   */
+//  def configOf[A](path: String)(implicit ct:ClassTag[A]):Option[A] =
+//    ct.runtimeClass.getSimpleName match {
+//      case "String" => config.getString(path).asInstanceOf[Option[A]]
+//      case "Int" => config.getInt(path).asInstanceOf[Option[A]]
+//      case "Long" => config.getLong(path).asInstanceOf[Option[A]]
+//      case "Double" => config.getDouble(path).asInstanceOf[Option[A]]
+//      case _=> None
+//    }
+
+
+
+  /**
    * Provide Responding object as a response builder.
    */
-  def respond = Responding
+  def respond:Responding.type = Responding
 
 
 
@@ -180,7 +198,7 @@ trait ScalavletBase
   /**
    * The servlet context in which this kernel runs.
    */
-  def context: Context = config.context
+  def context: Context = servletConfig.context
 
 
   /**
@@ -191,7 +209,7 @@ trait ScalavletBase
    * we get into https://lampsvn.epfl.ch/trac/scala/ticket/2497.
    */
   protected def initialize(config: ConfigT):Unit =  {
-    this.config = new Config {
+    this.servletConfig = new Config {
       def context = new Context(config.getServletContext())
       def initParameter(name: String) = Option(config.getInitParameter(name))
       def initParametersNames = config.getInitParameterNames().asScala

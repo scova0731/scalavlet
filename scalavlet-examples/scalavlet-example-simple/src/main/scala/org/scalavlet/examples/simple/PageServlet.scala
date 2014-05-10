@@ -49,7 +49,7 @@ object Template {
   }
 }
 
-class PageServlet extends Scalavlet {
+object PageServlet extends Scalavlet {
 
   private def displayPage(request:Request, title:String, content:Seq[Node]) =
     Template.page(title, content, url(request, _, includeServletPath = false))

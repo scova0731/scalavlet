@@ -28,7 +28,7 @@ import javax.servlet.annotation.HandlesTypes
  *
  * @see org.springframework.web.SpringServletContainerInitializer
  */
-@HandlesTypes(Array(classOf[ScalavletBootable]))
+@HandlesTypes(Array(classOf[Bootable]))
 class ScalavletContextInitializer extends ServletContainerInitializer {
 
 
@@ -40,10 +40,10 @@ class ScalavletContextInitializer extends ServletContainerInitializer {
         if (
           !waiClass.isInterface &&
           !Modifier.isAbstract(waiClass.getModifiers) &&
-          classOf[ScalavletBootable].isAssignableFrom(waiClass)) {
+          classOf[Bootable].isAssignableFrom(waiClass)) {
 
           try {
-            Some(waiClass.newInstance.asInstanceOf[ScalavletBootable])
+            Some(waiClass.newInstance.asInstanceOf[Bootable])
           }
           catch {
             case ex: Throwable =>

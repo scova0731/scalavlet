@@ -2,7 +2,7 @@ package org.scalavlet.support
 
 import org.scalavlet.Response
 import org.scalavlet.utils.DateUtil
-import org.scalavlet.ScalavletBootable
+import org.scalavlet.Bootable
 
 import scala.collection._
 import java.util.{Date, Locale}
@@ -134,7 +134,7 @@ object CookieSupport {
 }
 
 trait CookieContext {
-  self: ScalavletBootable =>
+  self: Bootable =>
 
   import CookieSupport._
 

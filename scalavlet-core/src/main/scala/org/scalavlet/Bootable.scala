@@ -2,7 +2,7 @@ package org.scalavlet
 
 import javax.servlet.ServletContext
 
-trait ScalavletBootable {
+trait Bootable {
 
   final def init(context: ServletContext) {
     onStart(new Context(context))
