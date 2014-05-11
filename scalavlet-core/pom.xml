@@ -28,6 +28,11 @@
       <artifactId>scala-library</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scalap</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
       <scope>provided</scope>
@@ -66,12 +71,23 @@
     </dependency>
     <dependency>
       <groupId>org.json4s</groupId>
-      <artifactId>json4s-jackson_2.10</artifactId>
+      <artifactId>json4s-core_2.10</artifactId>
       <version>3.2.9</version>
       <exclusions>
         <exclusion>
           <groupId>org.scala-lang</groupId>
-          <artifactId>scala-library</artifactId>
+          <artifactId>scalap</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.json4s</groupId>
+      <artifactId>json4s-jackson_2.10</artifactId>
+      <version>3.2.9</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.json4s</groupId>
+          <artifactId>json4s-core_2.10</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -180,19 +196,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-maven-plugin</artifactId>
-        <configuration>
-          <jettyXml>./src/main/resources/jetty.xml</jettyXml>
-          <httpConnector>
-            <port>16060</port>
-          </httpConnector>
-          <webApp>
-            <contextPath>/</contextPath>
-          </webApp>
-        </configuration>
       </plugin>
     </plugins>
   </build>

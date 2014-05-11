@@ -1,37 +1,31 @@
 package org.scalavlet
 
-import org.scalavlet.utils.{StringHelpers, Cacheable, MultiParams, Params}
 import org.scalavlet.richer.RichString
 import org.scalavlet.support.JsonSupport
+import org.scalavlet.utils.{StringHelpers, MultiParams, Params}
+
+import javax.servlet.http.HttpSession
 
 import scala.collection.immutable.DefaultMap
 import scala.collection.JavaConverters._
 import scala.io.Source
-import scala.util.Try
 import java.net.URI
 import java.io.InputStream
 import java.util.Locale
-import javax.servlet.http.HttpSession
 
 import StringHelpers._
-import scala.util.control.Exception._
-import scala.reflect.ClassTag
 
 
-class Request(r: SvRequest, response:SvResponse) extends Cacheable with JsonSupport {
+class Request(r: SvRequest, response:SvResponse) extends JsonSupport {
+
+  private[this] var _cacheForParams:MultiParams = _
+  private[this] var _cachedBody:Option[String] = None
+
 
   def underlying:SvRequest = r
 
-  //Use this carefully
+
   def underlyingResponse:SvResponse = response
-
-  type CallbackList = List[(Try[Any]) => Unit]
-
-  private var cacheForParams:MultiParams = _
-  private var _cachedBody:Option[String] = None
-
-  def addParamsCache(c:MultiParams) = cacheForParams = c
-  def paramsCache = cacheForParams
 
 
   /**
@@ -60,10 +54,12 @@ class Request(r: SvRequest, response:SvResponse) extends Cacheable with JsonSupp
     case "https" => Https
   }
 
+
   /**
    * The HTTP request method, such as GET or POST
    */
   def requestMethod: HttpMethod = HttpMethod(r.getMethod)
+
 
   /**
    * The remainder of the request URL's "path", designating the virtual
@@ -72,6 +68,7 @@ class Request(r: SvRequest, response:SvResponse) extends Cacheable with JsonSupp
    * does not have a trailing slash.
    */
   def pathInfo: String = Option(r.getPathInfo) getOrElse ""
+
 
   /**
    * The initial portion of the request URL's "path" that corresponds to
@@ -87,6 +84,7 @@ class Request(r: SvRequest, response:SvResponse) extends Cacheable with JsonSupp
 
   def requestURI: String = r.getRequestURI
 
+
   /**
    * The portion of the request URL that follows the ?, if any. May be
    * empty, but is always required!
@@ -96,8 +94,10 @@ class Request(r: SvRequest, response:SvResponse) extends Cacheable with JsonSupp
   
   def isSecure: Boolean = r.isSecure
 
+
   def isGZip: Boolean =
     Option(r.getHeader("Accept-Encoding")).getOrElse("").toUpperCase.contains("GZIP")
+
 
   def isHttps: Boolean = {
     // also respect load balancer version of the protocol
@@ -116,16 +116,9 @@ class Request(r: SvRequest, response:SvResponse) extends Cacheable with JsonSupp
 
   def buildBaseUrl: String = {
     "%s://%s".format(
-      if (needsHttps || isHttps) "https" else "http",
+      if (isHttps) "https" else "http",
       serverAuthority
     )
-  }
-
-
-  //TODO get this via Configuration
-  def needsHttps: Boolean = allCatch.withApply(_ => false) {
-    //servletContext.getInitParameter(ForceHttpsKey).blankOption.map(_.toBoolean) getOrElse
-    false
   }
 
 
@@ -152,6 +145,7 @@ class Request(r: SvRequest, response:SvResponse) extends Cacheable with JsonSupp
       origParams ++ paramsCache
   }
 
+
   def multiParams(key: String): Seq[String] = multiParams.apply(key)
 
 
@@ -173,7 +167,9 @@ class Request(r: SvRequest, response:SvResponse) extends Cacheable with JsonSupp
       r.getHeaderNames.asScala map { name => (name, r.getHeader(name)) }
   }
 
+
   def header(name: String): Option[String] = Option(r.getHeader(name))
+
 
   /**
    * Returns the name of the character encoding of the body, or None if no
@@ -182,19 +178,20 @@ class Request(r: SvRequest, response:SvResponse) extends Cacheable with JsonSupp
   def characterEncoding: Option[String] =
     Option(r.getCharacterEncoding)
 
+
   /**
    * Set the passed encoding to the wrapped HttpServletRequest
    * @param encoding
    */
-  def setCharacterEncoding(encoding: Option[String]) {
+  def setCharacterEncoding(encoding: Option[String]):Unit =
     r.setCharacterEncoding(encoding getOrElse null)
-  }
+
 
   /**
    * The content of the Content-Type header, or None if absent.
    */
-  def contentType: Option[String] =
-    Option(r.getContentType)
+  def contentType: Option[String] = Option(r.getContentType)
+
 
   /**
    * Returns the length, in bytes, of the body, or None if not known.
@@ -204,6 +201,7 @@ class Request(r: SvRequest, response:SvResponse) extends Cacheable with JsonSupp
     case length => Some(length)
   }
 
+
   /**
    * When combined with scriptName, pathInfo, and serverPort, can be used to
    * complete the URL.  Note, however, that the "Host" header, if present,
@@ -212,21 +210,21 @@ class Request(r: SvRequest, response:SvResponse) extends Cacheable with JsonSupp
    */
   def serverName = r.getServerName
 
+
   /**
    * When combined with scriptName, pathInfo, and serverName, can be used to
    * complete the URL.  See serverName for more details.
    */
   def serverPort = r.getServerPort
 
+
   /**
    * Optionally returns the HTTP referrer.
    *
    * @return the `Referer` header, or None if not set
    */
-  def referrer: Option[String] = r.getHeader("Referer") match {
-    case s: String => Some(s)
-    case null => None
-  }
+  def referrer: Option[String] = header("Referer")
+
 
   /**
    * Caches and returns the body of the response.  The method is idempotent
@@ -248,26 +246,33 @@ class Request(r: SvRequest, response:SvResponse) extends Cacheable with JsonSupp
         else
           encoding
 
-      val body = Source.fromInputStream(r.getInputStream, enc).mkString
+      val body = Source.fromInputStream(inputStream, enc).mkString
       _cachedBody = Some(body)
       body
     }
   }
 
 
-
-  //  private def cachedBody: Option[String] =
-//    get(cachedBodyKey).flatMap(_.asInstanceOf[String].blankOption)
-
   /**
-   * Returns true if the request is an AJAX request
+   * The input stream is an InputStream which contains the raw HTTP POST
+   * data.  The caller should not close this stream.
+   *
+   * In contrast to Rack, this stream is not rewindable.
    */
-  def isAjax: Boolean = r.getHeader("X-Requested-With") != null
+  def inputStream: InputStream = r.getInputStream
+
+
+//  /**
+//   * Returns true if the request is an AJAX request
+//   */
+//  def isAjax: Boolean = header("X-Requested-With").isDefined
+
 
   /**
    * Returns true if the request's method is not "safe" per RFC 2616.
    */
   def isWrite: Boolean = !HttpMethod(r.getMethod).isSafe
+
 
   /**
    * Returns a map of cookie names to lists of their values.  The default
@@ -287,16 +292,6 @@ class Request(r: SvRequest, response:SvResponse) extends Cacheable with JsonSupp
    * for a given cookie, the value is the first cookie of that name.
    */
   def cookies: Map[String, String] = Params(multiCookies)
-
-
-
-  /**
-   * The input stream is an InputStream which contains the raw HTTP POST
-   * data.  The caller should not close this stream.
-   *
-   * In contrast to Rack, this stream is not rewindable.
-   */
-  def inputStream: InputStream = r.getInputStream
 
 
   /**
@@ -326,5 +321,16 @@ class Request(r: SvRequest, response:SvResponse) extends Cacheable with JsonSupp
    */
   def locales: java.util.Enumeration[Locale] = r.getLocales
 
+
+  /**
+   * Used internally
+   */
+  private[scalavlet] def addParamsCache(c:MultiParams) = _cacheForParams = c
+
+
+  /**
+   * Used internally
+   */
+  private[scalavlet] def paramsCache = _cacheForParams
 }
 

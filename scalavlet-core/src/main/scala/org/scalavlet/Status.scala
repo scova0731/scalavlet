@@ -1,7 +1,7 @@
 package org.scalavlet
 
 /**
- * Copied and changed nothing from Scalatra
+ * Derived from Scalatra
  */
 object Status {
   def apply(code: Int): Status =
@@ -75,9 +75,9 @@ object Status {
 case class Status(code: Int, message: String)
   extends Ordered[Status]
 {
-  def compare(that: Status) = code.compareTo(that.code)
+  def compare(that: Status):Int = code.compareTo(that.code)
 
-  def line = {
+  def line:String = {
     val buf = new StringBuilder(message.length + 5)
     buf.append(code)
     buf.append(' ')
@@ -85,7 +85,5 @@ case class Status(code: Int, message: String)
     buf.toString()
   }
 
-  //TODO implement
-  def isOk:Boolean = true
-
+  def isOk:Boolean = code < 400
 }

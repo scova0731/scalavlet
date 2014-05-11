@@ -1,10 +1,9 @@
 package org.scalavlet.utils
 
+import org.scalavlet.richer.ImplicitRichers
+import org.scalavlet.Responser
 
 import java.io.File
-
-import org.scalavlet.richer.ImplicitRichers
-import org.scalavlet.{Responser, ContentTypeInferrer}
 
 
 object StringHelpers extends ImplicitRichers {
@@ -19,7 +18,7 @@ object StringHelpers extends ImplicitRichers {
    * $ - "application/octet-stream" for a byte array
    * $ - "text/html" for any other result
    */
-  def contentTypeInferrer: ContentTypeInferrer = {
+  def contentTypeInferrer: PartialFunction[Any, String] = {
     case s: String =>
       "text/plain"
 

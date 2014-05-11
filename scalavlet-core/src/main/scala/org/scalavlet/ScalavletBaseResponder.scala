@@ -22,7 +22,7 @@ class ScalavletBaseResponder(
    * The error handler function, called if an exception is thrown during
    * before filters or the routes.
    */
-  protected var errorHandler: ErrorHandler = { case t => throw t }
+  protected var errorHandler: PartialFunction[Throwable, Any] = { case t => throw t }
 
 
   def executeRoutes(): Unit = {
@@ -105,7 +105,7 @@ class ScalavletBaseResponder(
    * called recursively until it returns ().  () indicates that the
    * response has been rendered.
    */
-  private[scalavlet]  def renderPipeline(): RenderPipeline = {
+  private[scalavlet]  def renderPipeline(): PartialFunction[Any, Any] = {
     //If body is Int, it should be distinguished from normal Int
     case Responser(status, body: Int, resultHeaders) =>
       response.setStatus(status)

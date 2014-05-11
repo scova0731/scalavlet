@@ -2,7 +2,9 @@ package org.scalavlet
 
 import org.scalavlet.utils.Loggable
 
-import javax.servlet.{DispatcherType, Filter, ServletContext}
+import javax.servlet.DispatcherType
+import javax.servlet.Filter
+import javax.servlet.ServletContext
 import javax.servlet.http.HttpServlet
 
 import scala.reflect.ClassTag
@@ -124,8 +126,6 @@ class Context(c: ServletContext) extends Loggable {
   private def mountServlet(servlet: HttpServlet, urlPattern: String, loadOnStartup: Int):Unit = {
     val reg = Option(c.getServletRegistration(servlet.getClass.getName)) getOrElse {
       val r = c.addServlet(servlet.getClass.getName, servlet)
-//      if (servlet.isInstanceOf[ScalatraAsyncSupport])
-//        r.setAsyncSupported(true)
       r.setLoadOnStartup(loadOnStartup)
       r
     }
@@ -137,11 +137,6 @@ class Context(c: ServletContext) extends Loggable {
     val name = servletClass.getName
     val reg = Option(c.getServletRegistration(name)) getOrElse {
       val r = c.addServlet(name, servletClass)
-      // since we only have a Class[_] here, we can't access the MultipartConfig value
-      // if (classOf[HasMultipartConfig].isAssignableFrom(servletClass))
-//      if (classOf[ScalatraAsyncSupport].isAssignableFrom(servletClass)) {
-//        r.setAsyncSupported(true)
-//      }
       r.setLoadOnStartup(loadOnStartup)
       r
     }
@@ -152,11 +147,6 @@ class Context(c: ServletContext) extends Loggable {
   private def mountFilter(filter: Filter, urlPattern: String):Unit =
     c.addFilter(filter.getClass.getName, filter).
       addMappingForUrlPatterns(dispatchers, true, urlPattern)
-    //val reg = Option(context.getFilterRegistration(name)) getOrElse context.addFilter(name, filter)
-    // We don't have an elegant way of threading this all the way through
-    // in an abstract fashion, so we'll dispatch on everything.
-    //TODO come later about "threading" and DispatcherType
-    //reg.addMappingForUrlPatterns(dispatchers, true, urlPattern)
 
 
   private def mountFilter(filterClass: Class[Filter], urlPattern: String):Unit =
@@ -178,14 +168,15 @@ class Context(c: ServletContext) extends Loggable {
 /**
  *
  */
-class ContextInitParams(underlying:ServletContext) extends mutable.Map[String, String] {
+//TODO refactor configuration part
+class ContextInitParams(c: ServletContext) extends mutable.Map[String, String] {
 
   override def get(key: String): Option[String] =
-    Option(underlying.getInitParameter(key))
+    Option(c.getInitParameter(key))
 
 
   override def iterator: Iterator[(String, String)] = {
-    val theInitParams = underlying.getInitParameterNames
+    val theInitParams = c.getInitParameterNames
 
     new Iterator[(String, String)] {
 
@@ -193,7 +184,7 @@ class ContextInitParams(underlying:ServletContext) extends mutable.Map[String, S
 
       def next(): (String, String) = {
         val nm = theInitParams.nextElement()
-        (nm, underlying.getInitParameter(nm))
+        (nm, c.getInitParameter(nm))
       }
     }
   }
@@ -201,12 +192,12 @@ class ContextInitParams(underlying:ServletContext) extends mutable.Map[String, S
   //TODO add init-params from application.conf
 
   override def +=(kv: (String, String)): this.type = {
-    underlying.setInitParameter(kv._1, kv._2)
+    c.setInitParameter(kv._1, kv._2)
     this
   }
 
   override def -=(key: String): this.type = {
-    underlying.setInitParameter(key, null)
+    c.setInitParameter(key, null)
     this
   }
 }

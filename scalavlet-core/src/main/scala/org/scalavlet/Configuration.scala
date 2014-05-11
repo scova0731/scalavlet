@@ -186,15 +186,15 @@ case class Configuration(underlying: Config) {
   /**
    * Retrieves a configuration value as a Seq of `Long`.
    */
-  def getLongSeq(path: String): Option[Seq[java.lang.Long]] =
-    readValue(path, underlying.getLongList(path)).map(asScalaList)
+  def getLongSeq(path: String): Option[Seq[Long]] =
+    readValue(path, underlying.getLongList(path)).map(asScalaListConv(_){j => j})
 
 
   /**
    * Retrieves a configuration value as Seq of `Milliseconds`.
    */
   def getDurationSeq(path: String, unit:TimeUnit): Option[Seq[Long]] =
-    readValue(path, underlying.getDurationList(path, unit)).map(asScalaListConv(_){j:java.lang.Long => j})
+    readValue(path, underlying.getDurationList(path, unit)).map(asScalaListConv(_){j=> j})
 
 
   /**

@@ -2,12 +2,13 @@ package org.scalavlet
 
 import org.scalavlet.support.Cookie
 import org.scalavlet.richer.ImplicitRichers
+
 import javax.servlet.http.{Cookie => ServletCookie}
 import javax.servlet.ServletOutputStream
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable
-import java.io.{PrintWriter}
+import java.io.PrintWriter
 
 /**
  *

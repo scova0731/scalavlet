@@ -46,14 +46,16 @@ case object Patch extends HttpMethod {
   override def toString = "PATCH"
 }
 /** Special for ServletFilter */
-case object Filter extends HttpMethod {
+case object SvFilter extends HttpMethod {
   val isSafe = false
   override def toString = "FILTER"
 }
 
+
 case class ExtensionMethod(name: String) extends HttpMethod {
   val isSafe = false
 }
+
 
 object HttpMethod {
   private[this] val methodMap =

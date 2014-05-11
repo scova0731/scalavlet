@@ -1,11 +1,10 @@
 package org.scalavlet
 
-import javax.servlet.{ServletException, ServletContext, ServletContainerInitializer}
-import java.{util => ju}
-import java.lang.reflect.Modifier
-
 import scala.collection.JavaConverters._
 import javax.servlet.annotation.HandlesTypes
+import javax.servlet.{ServletException, ServletContext, ServletContainerInitializer}
+import java.lang.reflect.Modifier
+import java.{util => ju}
 
 /**
  * Servlet 3.0 {@link ServletContainerInitializer} designed to support code-based
@@ -29,11 +28,11 @@ import javax.servlet.annotation.HandlesTypes
  * @see org.springframework.web.SpringServletContainerInitializer
  */
 @HandlesTypes(Array(classOf[Bootable]))
-class ScalavletContextInitializer extends ServletContainerInitializer {
+class Initializer extends ServletContainerInitializer {
 
 
   override def onStartup (webAppInitializerClasses: ju.Set[Class[_]], ctx: ServletContext): Unit = {
-    ctx.log("Scalavlet initialization started !")
+    ctx.log("Scalavlet initialization started.")
 
     val bootables = if (webAppInitializerClasses != null) {
       webAppInitializerClasses.asScala.map({ waiClass =>
@@ -49,18 +48,21 @@ class ScalavletContextInitializer extends ServletContainerInitializer {
             case ex: Throwable =>
               throw new ServletException("Failed to instantiate ScalavletBootable class", ex)
           }
+
         } else
+
           None
-      }).filter(_.isDefined).map(_.get)
+
+      }).flatten
     } else Set()
 
 
 
     if (bootables.isEmpty) {
-      ctx.log("No ScalavletBootable types detected on classpath")
+      ctx.log("No Bootable types detected on the classpath.")
 
     } else {
-      ctx.log("ScalavletBootable detected on classpath: " + bootables)
+      ctx.log(s"Bootable classes detected on classpath: $bootables")
       bootables.foreach(bootable => bootable.init(ctx))
 
     }

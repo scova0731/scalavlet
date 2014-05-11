@@ -35,7 +35,7 @@ trait ScalavletFilter extends Filter with ScalavletBase
 
 
   def filter(transformers: RouteTransformer*)(action: Request => Any): Route =
-    addRoute(Filter, transformers, action)
+    addRoute(SvFilter, transformers, action)
 
 
   // val FilterPathKey ="org.scalatra.ScalatraFilter.requestPath"

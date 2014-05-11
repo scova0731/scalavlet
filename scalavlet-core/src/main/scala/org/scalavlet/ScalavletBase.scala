@@ -2,7 +2,7 @@ package org.scalavlet
 
 import org.scalavlet.route.{Route, RouteTransformer, RouteRegistry, ImplicitRouteMatchers}
 import org.scalavlet.support.SessionSupport
-import org.scalavlet.utils.StringHelpers
+import org.scalavlet.utils.{Loggable, StringHelpers}
 import org.slf4j.LoggerFactory
 import javax.servlet.{ServletOutputStream, ServletContext}
 import javax.servlet.http.{HttpServletResponseWrapper, HttpServletResponse}
@@ -22,15 +22,15 @@ import StringHelpers._
 trait ScalavletBase
   extends ImplicitRouteMatchers
   with SessionSupport
-  with Handler {
+  with Handler
+  with Loggable {
 
-
-  //TODO refactor logger
-  protected val logger = LoggerFactory.getLogger(classOf[ScalavletBase])
+  protected val logger = loggerOf[ScalavletBase]
 
   /**
    * The default character encoding for requests and responses.
    */
+  //TODO move out
   protected val defaultCharacterEncoding = "UTF-8"
 
 

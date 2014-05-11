@@ -7,15 +7,11 @@ import java.nio.charset.Charset
 /**
  * RicherString
  *
- * was just copied from org.scalatra.util.RicherString
+ * Derived from org.scalatra.util.RicherString
  */
 class RichString(orig: String) {
   def isBlank = orig == null || orig.trim.isEmpty
-  @deprecated("Use nonBlank instead", "2.0")
-  def isNonBlank = !isBlank
 
-  @deprecated("Use blankOption instead", "2.0")
-  def toOption = blankOption
   def blankOption = if (isBlank) None else Some(orig)
   def nonBlank = !isBlank
 
@@ -42,7 +38,3 @@ class RichString(orig: String) {
     case _ => false
   }
 }
-
-//object RichString {
-//  implicit def stringToRicherString(s: String) = new RichString(s)
-//}
