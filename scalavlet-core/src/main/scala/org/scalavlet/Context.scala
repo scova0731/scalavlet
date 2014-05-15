@@ -8,7 +8,6 @@ import javax.servlet.ServletContext
 import javax.servlet.http.HttpServlet
 
 import scala.reflect.ClassTag
-import scala.collection.mutable
 import java.net.URL
 import java.{util => ju}
 
@@ -43,15 +42,18 @@ class Context(c: ServletContext) extends Loggable {
 
   def underlying: ServletContext = c
 
-  val initParams = new ContextInitParams(c)
 
   def path: String = c.getContextPath
-  
+
+
   def namedDispatcher(name: String) = c.getNamedDispatcher(name: String)
+
 
   def log(msg: String, ex: Throwable) = c.log(msg, ex)
 
+
   def log(msg: String) = c.log(msg)
+
 
   /**
    * Optionally returns a URL to the resource mapped to the given path.  This
@@ -76,6 +78,7 @@ class Context(c: ServletContext) extends Loggable {
    */
   def resource(req: Request): Option[URL] =
     resource(req.servletPath + Option(req.pathInfo).getOrElse(""))
+
 
   def resource(req: SvRequest): Option[URL] =
     resource(req.getServletPath + Option(req.getPathInfo).getOrElse(""))
@@ -162,42 +165,4 @@ class Context(c: ServletContext) extends Loggable {
 
 
   private val dispatchers = ju.EnumSet.allOf(classOf[DispatcherType])
-}
-
-
-/**
- *
- */
-//TODO refactor configuration part
-class ContextInitParams(c: ServletContext) extends mutable.Map[String, String] {
-
-  override def get(key: String): Option[String] =
-    Option(c.getInitParameter(key))
-
-
-  override def iterator: Iterator[(String, String)] = {
-    val theInitParams = c.getInitParameterNames
-
-    new Iterator[(String, String)] {
-
-      def hasNext: Boolean = theInitParams.hasMoreElements
-
-      def next(): (String, String) = {
-        val nm = theInitParams.nextElement()
-        (nm, c.getInitParameter(nm))
-      }
-    }
-  }
-
-  //TODO add init-params from application.conf
-
-  override def +=(kv: (String, String)): this.type = {
-    c.setInitParameter(kv._1, kv._2)
-    this
-  }
-
-  override def -=(key: String): this.type = {
-    c.setInitParameter(key, null)
-    this
-  }
 }

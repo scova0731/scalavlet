@@ -11,7 +11,7 @@ object SampleServlet extends Scalavlet {
   }
 }
 
-class Bootstrap extends ScalavletBootable {
+class Bootstrap extends Bootable {
   def onStart (ctx: Context): Unit = {
     ctx.mount(SampleServlet, "/")
   }

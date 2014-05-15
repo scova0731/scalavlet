@@ -1,7 +1,6 @@
 package org.scalavlet.support
 
-import org.scalavlet.{Request, SvRequest}
-import org.scalavlet.richer.{ImplicitRichers, Session}
+import org.scalavlet.{Session, Request, SvRequest}
 
 import javax.servlet.http.HttpSession
 
@@ -9,14 +8,13 @@ import javax.servlet.http.HttpSession
 /**
  * This trait provides session support for stateful applications.
  */
-trait SessionSupport extends ImplicitRichers {
-
+trait SessionSupport {
 
   /**
    * The current session.  Creates a session if none exists.
    */
   implicit def session(implicit request: Request): Session =
-    request.session
+    new Session(request.session)
 
 
   /**
@@ -24,13 +22,6 @@ trait SessionSupport extends ImplicitRichers {
    */
   def session(key: String)(implicit request: Request): Any =
     session(request).cache(key)
-
-
-//  /**
-//   * Get a value from the current session
-//   */
-//  def session(key: Symbol)(implicit request: Request): Any =
-//    session(request).cache(key)
 
 
   /**
