@@ -9,8 +9,7 @@
   <inceptionYear>2014</inceptionYear>
   <packaging>pom</packaging>
 
-
-  <url>http://github.io/scalavlet</url>
+  <url>http://www.scalavlet.org</url>
   <developers>
     <developer>
       <id>scova0731</id>
@@ -19,9 +18,9 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:git:git@github.com:scova0731/scalavlet.git</connection>
-    <url>scm:git:git@github.com:scova0731/scalavlet.git</url>
-    <developerConnection>scm:git:git@github.com:scova0731/scalavlet.git</developerConnection>
+    <url>git@github.com:scalavlet/scalavlet.git</url>
+    <connection>scm:git:git@github.com:scalavlet/scalavlet.git</connection>
+    <developerConnection>scm:git:git@github.com:scalavlet/scalavlet.git</developerConnection>
   </scm>
   <licenses>
     <license>
@@ -30,6 +29,14 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+
+  <!-- The Central Repository -->
+  <!-- https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide -->
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
 
   <modules>
     <module>scalavlet-core</module>
@@ -276,4 +283,34 @@
       </plugins>
     </pluginManagement>
   </build>
+
+  <profiles>
+    <profile>
+      <id>release-sign-artifacts</id>
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.5</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
