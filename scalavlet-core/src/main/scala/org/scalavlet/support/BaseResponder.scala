@@ -1,22 +1,33 @@
-package org.scalavlet
+package org.scalavlet.support
 
 import org.scalavlet.utils.{StringHelpers, FileCharset}
 import org.scalavlet.utils.Commons._
 import org.scalavlet.richer.ImplicitRichers
-import org.scalavlet.route.{RouteRegistry, UriDecoder, MatchedRoute}
+import org.scalavlet.route.{RouteRegistry, UriDecoder}
 
 import scala.annotation.tailrec
 import java.io.{FileInputStream, File}
 
 import StringHelpers._
+import scala.concurrent.ExecutionContext
+import org.scalavlet._
+import org.scalavlet.Responser
+import scala.Some
+import org.scalavlet.route.MatchedRoute
 
 
-class ScalavletBaseResponder(
-  request: Request,
-  response: Response,
+class BaseResponder (
+  val request: Request,
+  val response: Response,
   routes:RouteRegistry,
   doNotFound: (Request, Response) => Action,
-  requestPath: Request => String) extends ImplicitRichers {
+  requestPath: Request => String,
+  executionContext: ExecutionContext
+                               )
+  extends ImplicitRichers with AsyncResponder {
+
+  implicit protected def executor: ExecutionContext = executionContext
+
 
   /**
    * The error handler function, called if an exception is thrown during
@@ -83,12 +94,12 @@ class ScalavletBaseResponder(
    *
    * @see #renderPipeline
    */
-  private[scalavlet]  def renderResponseBody(actionResult: Any):Unit = {
+  private[scalavlet] def renderResponseBody(actionResult: Any):Unit = {
     @tailrec def loop(ar: Any): Any = ar match {
       case _: Unit | Unit =>
         //runRenderCallbacks(Success(actionResult))
       case a =>
-        loop(renderPipeline().lift(a).orNull)
+        loop(asyncRenderPipeline().orElse(renderPipeline()).lift(a).orNull)
     }
 
     try {
@@ -105,7 +116,7 @@ class ScalavletBaseResponder(
    * called recursively until it returns ().  () indicates that the
    * response has been rendered.
    */
-  private[scalavlet]  def renderPipeline(): PartialFunction[Any, Any] = {
+  private[scalavlet] def renderPipeline(): PartialFunction[Any, Any] = {
     //If body is Int, it should be distinguished from normal Int
     case Responser(status, body: Int, resultHeaders) =>
       response.setStatus(status)
