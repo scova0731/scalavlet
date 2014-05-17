@@ -17,16 +17,16 @@ object JsonOption extends Enumeration {
 
 object Responding {
   
-  val ok = S200_Ok
-  val created = S201_Created
-  val accepted = S202_Accepted
-  val movedPermanently = S301_MovedPermanently
-  val badRequest = S400_BadRequest
-  val unauthorized = S401_Unauthorized
-  val forbidden = S403_Forbidden
-  val notFound = S404_NotFound
-  val methodNotAllowed = S405_MethodNotAllowed
-  val internalServerError = S500_InternalServerError
+  val ok = Ok
+  val created = Created
+  val accepted = Accepted
+  val movedPermanently = MovedPermanently
+  val badRequest = BadRequest
+  val unauthorized = Unauthorized
+  val forbidden = Forbidden
+  val notFound = NotFound
+  val methodNotAllowed = MethodNotAllowed
+  val internalServerError = InternalServerError
 
   def html(body: Any):Responser =
     Responser(status(200, ""), body, Map("Content-Type" -> "text/html"))
@@ -66,277 +66,337 @@ object Responding {
 
     Responser(status(code, ""), msg, Map("Location" -> location))
   }
+}
 
-  object S200_Ok {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(200, reason), body, headers)
-  }
-
-  object S201_Created {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(201, reason), body, headers)
-  }
-
-  object S202_Accepted {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(202, reason), body, headers)
-  }
-
-  object S203_NonAuthoritativeInformation {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(203, reason), body, headers)
-  }
-
-  object S204_NoContent {
-    def apply(headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(204, reason), Unit, headers)
-  }
-
-  object S205_ResetContent {
-    def apply(headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(205, reason), Unit, headers)
-  }
-
-  object S206_PartialContent {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(206, reason), body, headers)
-  }
-
-  object S207_MultiStatus {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(207, reason), body, headers)
-  }
-
-  object S208_AlreadyReported {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(208, reason), body, headers)
-  }
-
-  object S226_IMUsed {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(226, reason), body, headers)
-  }
-
-  object S300_MultipleChoices {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(300, reason), body, headers)
-  }
-
-  object S301_MovedPermanently {
-    def apply(location: String, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(301, reason), Unit, Map("Location" -> location) ++ headers)
-  }
-
-  object S302_Found {
-    def apply(location: String, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(302, reason), Unit, Map("Location" -> location) ++ headers)
-  }
-
-  object S303_SeeOther {
-    def apply(location: String, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(303, reason), Unit, Map("Location" -> location) ++ headers)
-  }
-
-  object S304_NotModified {
-    def apply(headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(304, reason), Unit, headers)
-  }
-
-  object S305_UseProxy {
-    def apply(location: String, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(305, reason), Unit, Map("Location" -> location) ++ headers)
-  }
-
-  object S307_TemporaryRedirect {
-    def apply(location: String, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(307, reason), Unit, Map("Location" -> location) ++ headers)
-  }
-
-  object S308_PermanentRedirect {
-    def apply(location: String, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(308, reason), Unit, Map("Location" -> location) ++ headers)
-  }
-
-  object S400_BadRequest {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(400, reason), body, headers)
-  }
-
-  object S401_Unauthorized {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(401, reason), body, headers)
-  }
-
-  object S402_PaymentRequired {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(402, reason), body, headers)
-  }
-
-  object S403_Forbidden {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(403, reason), body, headers)
-  }
-
-  object S404_NotFound {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(404, reason), body, headers)
-  }
-
-  object S405_MethodNotAllowed {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(405, reason), body, headers)
-  }
-
-  object S406_NotAcceptable {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(406, reason), body, headers)
-  }
-
-  object S407_ProxyAuthenticationRequired {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(407, reason), body, headers)
-  }
-
-  object S408_RequestTimeout {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(408, reason), body, headers)
-  }
-
-  object S409_Conflict {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(409, reason), body, headers)
-  }
-
-  object S410_Gone {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(410, reason), body, headers)
-  }
-
-  object S411_LengthRequired {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(411, reason), body, headers)
-  }
-
-  object S412_PreconditionFailed {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(412, reason), body, headers)
-  }
-
-  object S413_RequestEntityTooLarge {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(413, reason), body, headers)
-  }
-
-  object S414_RequestURITooLong {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(414, reason), body, headers)
-  }
-
-  object S415_UnsupportedMediaType {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(415, reason), body, headers)
-  }
-
-  object S416_RequestedRangeNotSatisfiable {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(416, reason), body, headers)
-  }
-
-  object S417_ExpectationFailed {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(417, reason), body, headers)
-  }
-
-  object S422_UnprocessableEntity {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(422, reason), body, headers)
-  }
-
-  object S423_Locked {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(423, reason), body, headers)
-  }
-
-  object S424_FailedDependency {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(424, reason), body, headers)
-  }
-
-  object S426_UpgradeRequired {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(426, reason), body, headers)
-  }
-
-  object S428_PreconditionRequired {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(428, reason), body, headers)
-  }
-
-  object S429_TooManyRequests {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(429, reason), body, headers)
-  }
-
-  object S431_RequestHeaderFieldsTooLarge {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(431, reason), body, headers)
-  }
-
-  object S500_InternalServerError {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(500, reason), body, headers)
-  }
-
-  object S501_NotImplemented {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(501, reason), body, headers)
-  }
-
-  object S502_BadGateway {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(502, reason), body, headers)
-  }
-
-  object S503_ServiceUnavailable {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(503, reason), body, headers)
-  }
-
-  object S504_GatewayTimeout {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(504, reason), body, headers)
-  }
-
-  object S505_HTTPVersionNotSupported {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(505, reason), body, headers)
-  }
-
-  object S506_VariantAlsoNegotiates {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(506, reason), body, headers)
-  }
-
-  object S507_InsufficientStorage {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(507, reason), body, headers)
-  }
-
-  object S508_LoopDetected {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(508, reason), body, headers)
-  }
-
-  object S510_NotExtended {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(510, reason), body, headers)
-  }
-
-  object S511_NetworkAuthenticationRequired {
-    def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
-      Responser(status(511, reason), body, headers)
-  }
+trait ShortCutResponser {
+  def withNoParams():Responser
 }
 
 
 
+/** HTTP 200 */
+object Ok extends ShortCutResponser {
+  def withNoParams() = apply()
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(200, reason), body, headers)
+
+}
+
+/** HTTP 201 */
+object Created {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(201, reason), body, headers)
+}
+
+/** HTTP 202 */
+object Accepted {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(202, reason), body, headers)
+}
+
+/** HTTP 203 */
+object NonAuthoritativeInformation {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(203, reason), body, headers)
+}
+
+/** HTTP 204 */
+object NoContent {
+  def apply(headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(204, reason), Unit, headers)
+}
+
+/** HTTP 205 */
+object ResetContent {
+  def apply(headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(205, reason), Unit, headers)
+}
+
+/** HTTP 206 */
+object PartialContent {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(206, reason), body, headers)
+}
+
+/** HTTP 207 */
+object MultiStatus {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(207, reason), body, headers)
+}
+
+/** HTTP 208 */
+object AlreadyReported {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(208, reason), body, headers)
+}
+
+/** HTTP 226 */
+object IMUsed {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(226, reason), body, headers)
+}
+
+/** HTTP 300 */
+object MultipleChoices {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(300, reason), body, headers)
+}
+
+/** HTTP 301 */
+object MovedPermanently {
+  def apply(location: String, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(301, reason), Unit, Map("Location" -> location) ++ headers)
+}
+
+/** HTTP 302 */
+object Found {
+  def apply(location: String, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(302, reason), Unit, Map("Location" -> location) ++ headers)
+}
+
+/** HTTP 303 */
+object SeeOther {
+  def apply(location: String, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(303, reason), Unit, Map("Location" -> location) ++ headers)
+}
+
+/** HTTP 304 */
+object NotModified {
+  def apply(headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(304, reason), Unit, headers)
+}
+
+/** HTTP 305 */
+object UseProxy {
+  def apply(location: String, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(305, reason), Unit, Map("Location" -> location) ++ headers)
+}
+
+/** HTTP 307 */
+object TemporaryRedirect {
+  def apply(location: String, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(307, reason), Unit, Map("Location" -> location) ++ headers)
+}
+
+/** HTTP 308 */
+object PermanentRedirect {
+  def apply(location: String, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(308, reason), Unit, Map("Location" -> location) ++ headers)
+}
+
+/** HTTP 400 */
+object BadRequest {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(400, reason), body, headers)
+}
+
+/** HTTP 401 */
+object Unauthorized {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(401, reason), body, headers)
+}
+
+/** HTTP 402 */
+object PaymentRequired {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(402, reason), body, headers)
+}
+
+/** HTTP 403 */
+object Forbidden {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(403, reason), body, headers)
+}
+
+/** HTTP 404 */
+object NotFound {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(404, reason), body, headers)
+}
+
+/** HTTP 405 */
+object MethodNotAllowed {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(405, reason), body, headers)
+}
+
+/** HTTP 406 */
+object NotAcceptable {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(406, reason), body, headers)
+}
+
+/** HTTP 407 */
+object ProxyAuthenticationRequired {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(407, reason), body, headers)
+}
+
+/** HTTP 408 */
+object RequestTimeout {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(408, reason), body, headers)
+}
+
+/** HTTP 409 */
+object Conflict {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(409, reason), body, headers)
+}
+
+/** HTTP 410 */
+object Gone {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(410, reason), body, headers)
+}
+
+/** HTTP 411 */
+object LengthRequired {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(411, reason), body, headers)
+}
+
+/** HTTP 412 */
+object PreconditionFailed {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(412, reason), body, headers)
+}
+
+/** HTTP 413 */
+object RequestEntityTooLarge {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(413, reason), body, headers)
+}
+
+/** HTTP 414 */
+object RequestURITooLong {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(414, reason), body, headers)
+}
+
+/** HTTP 415 */
+object UnsupportedMediaType {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(415, reason), body, headers)
+}
+
+/** HTTP 416 */
+object RequestedRangeNotSatisfiable {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(416, reason), body, headers)
+}
+
+/** HTTP 417 */
+object ExpectationFailed {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(417, reason), body, headers)
+}
+
+/** HTTP 422 */
+object UnprocessableEntity {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(422, reason), body, headers)
+}
+
+/** HTTP 423 */
+object Locked {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(423, reason), body, headers)
+}
+
+/** HTTP 424 */
+object FailedDependency {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(424, reason), body, headers)
+}
+
+/** HTTP 426 */
+object UpgradeRequired {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(426, reason), body, headers)
+}
+
+/** HTTP 428 */
+object PreconditionRequired {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(428, reason), body, headers)
+}
+
+/** HTTP 429 */
+object TooManyRequests {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(429, reason), body, headers)
+}
+
+/** HTTP 431 */
+object RequestHeaderFieldsTooLarge {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(431, reason), body, headers)
+}
+
+/** HTTP 500 */
+object InternalServerError {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(500, reason), body, headers)
+}
+
+/** HTTP 501 */
+object NotImplemented extends ShortCutResponser {
+  def withNoParams() = apply()
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(501, reason), body, headers)
+}
+
+/** HTTP 502 */
+object BadGateway {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(502, reason), body, headers)
+}
+
+/** HTTP 503 */
+object ServiceUnavailable {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(503, reason), body, headers)
+}
+
+/** HTTP 504 */
+object GatewayTimeout {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(504, reason), body, headers)
+}
+
+/** HTTP 505 */
+object HTTPVersionNotSupported {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(505, reason), body, headers)
+}
+
+/** HTTP 506 */
+object VariantAlsoNegotiates {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(506, reason), body, headers)
+}
+
+/** HTTP 507 */
+object InsufficientStorage {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(507, reason), body, headers)
+}
+
+/** HTTP 508 */
+object LoopDetected {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(508, reason), body, headers)
+}
+
+/** HTTP 510 */
+object NotExtended {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(510, reason), body, headers)
+}
+
+/** HTTP 511 */
+object NetworkAuthenticationRequired {
+  def apply(body: Any = Unit, headers: Map[String, String] = Map.empty, reason: String = "") =
+    Responser(status(511, reason), body, headers)
+}

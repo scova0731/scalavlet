@@ -64,6 +64,7 @@ Roadmap
 - No xml configuration : DONE
 - Integrated JSON input and output : DONE
 - Integrated Typesafe/Config configuration : DONE
+- Async feature integration : DONE
 - Logging
 - Sample application
 - Refactoring and testing
@@ -73,8 +74,9 @@ Roadmap
 - Authentication support
 - Session and Cookie management
 - File uploading
-- SBT/Gradle builds in addition to Maven
 - More sample applications (JNDI, Slick, view libraries, Jolokia/hawt.io ...)
+- More documentation
+- SBT/Gradle builds in addition to Maven
 - I18n/L10n
 - XSS protection
 - Swagger support
@@ -82,7 +84,7 @@ Roadmap
 - SSL
 - CORS
 - Multi version builds and CI with Cloudbees
-- Servlet 3.1 Web Socket/Async. support
+- Servlet 3.1 Web Socket support
 
 
 

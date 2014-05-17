@@ -1,7 +1,7 @@
 package org.scalavlet
 
 import org.scalavlet.route.{Route, RouteTransformer, RouteRegistry, ImplicitRouteMatchers}
-import org.scalavlet.support.SessionSupport
+import org.scalavlet.support.{BaseResponder, SessionSupport}
 import org.scalavlet.utils.{Loggable, StringHelpers}
 import org.slf4j.LoggerFactory
 import javax.servlet.{ServletOutputStream, ServletContext}
@@ -12,6 +12,7 @@ import scala.collection.JavaConverters._
 import java.util.zip.GZIPOutputStream
 import java.io.PrintWriter
 import scala.reflect.ClassTag
+import scala.concurrent.ExecutionContext
 
 //import reflectiveCalls for Config trait
 import scala.language.reflectiveCalls
@@ -26,6 +27,9 @@ trait ScalavletBase
   with Loggable {
 
   protected val logger = loggerOf[ScalavletBase]
+
+  protected def executionContext: ExecutionContext = ExecutionContext.Implicits.global
+
 
   /**
    * The default character encoding for requests and responses.
@@ -87,12 +91,13 @@ trait ScalavletBase
     wResponse.setCharacterEncoding(Some(defaultCharacterEncoding))
 
     withGZipSupport(wRequest, wResponse) { (q, r) =>
-      new ScalavletBaseResponder(
+      new BaseResponder(
         q,
         r,
         routes,
         notFound,
-        requestPath).executeRoutes()
+        requestPath,
+        executionContext).executeRoutes()
     }
   }
 

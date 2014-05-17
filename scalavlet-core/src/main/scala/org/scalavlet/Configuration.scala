@@ -1,16 +1,18 @@
 package org.scalavlet
 
 import com.typesafe.config._
-import scala.util.control.NonFatal
 
+import scala.util.control.NonFatal
 import scala.collection.JavaConverters._
 import java.util.concurrent.TimeUnit
+
 
 /**
  * Configuration keeps configuration values retrieved by TypesafeHub/Config
  */
 object Configuration {
 
+  //TODO add exception handling for configuration loading
   private[this] val config = Configuration(ConfigFactory.load())
 
   def apply():Configuration = config
@@ -21,6 +23,8 @@ object Configuration {
   private[Configuration] def asScalaListConv[A, B](l: java.util.List[A])(converter: A => B): Seq[B] =
     asScalaBufferConverter(l).asScala.map(converter).toList
 
+  //TODO arrange reference.conf
+  val scalavletAsyncTimeout = config.getLong("scalavlet.async.timeout").getOrElse(60000L)
 }
 
 

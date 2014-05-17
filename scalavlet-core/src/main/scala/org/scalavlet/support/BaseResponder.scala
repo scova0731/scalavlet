@@ -4,16 +4,14 @@ import org.scalavlet.utils.{StringHelpers, FileCharset}
 import org.scalavlet.utils.Commons._
 import org.scalavlet.richer.ImplicitRichers
 import org.scalavlet.route.{RouteRegistry, UriDecoder}
+import org.scalavlet._
+import org.scalavlet.route.MatchedRoute
 
 import scala.annotation.tailrec
+import scala.concurrent.ExecutionContext
 import java.io.{FileInputStream, File}
 
 import StringHelpers._
-import scala.concurrent.ExecutionContext
-import org.scalavlet._
-import org.scalavlet.Responser
-import scala.Some
-import org.scalavlet.route.MatchedRoute
 
 
 class BaseResponder (
@@ -168,6 +166,9 @@ class BaseResponder (
     case lazyAction: Action =>
       lazyAction()
 
+    case shortcut:ShortCutResponser =>
+      shortcut.withNoParams()
+      
     case x =>
       response.writer.print(x.toString)
   }

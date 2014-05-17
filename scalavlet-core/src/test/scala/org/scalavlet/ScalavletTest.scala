@@ -30,8 +30,7 @@ class ScalavletTestServlet extends Scalavlet {
   }
 
   get("/no_content") { req =>
-    respond.S204_NoContent()
-
+    NoContent()
   }
 
   get("/return-int") { req =>
