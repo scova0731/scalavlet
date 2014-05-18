@@ -5,7 +5,10 @@ import org.scalavlet.Responser
 
 import java.io.File
 
-
+/**
+ *
+ * Derived from Scalatra
+ */
 object StringHelpers extends ImplicitRichers {
 
   /**

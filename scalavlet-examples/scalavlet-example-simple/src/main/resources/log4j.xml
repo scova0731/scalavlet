@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" >
+<log4j:configuration>
+  <!--
+      GEXSUS Batch Default Logging Configuration
+      ==================================================
+  -->
+  <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
+    <param name="threshold" value="TRACE" />
+    <param name="target" value="System.out"/>
+    <param name="Encoding" value="UTF-8"/>
+    <layout class="org.apache.log4j.PatternLayout">
+      <!--Use short version of format because the log is shown inside pcd-launcher-->
+      <!--<param name="ConversionPattern" value="%d{yyyy/MM/dd HH:mm:ss} [%5p] %m%n" />-->
+      <param name="ConversionPattern" value="[%5p] %m%n" />
+    </layout>
+    <filter class="org.apache.log4j.varia.LevelRangeFilter">
+      <param name="LevelMin" value="TRACE" />
+      <param name="LevelMax" value="WARN" />
+    </filter>
+  </appender>
+
+  <appender name="stderr" class="org.apache.log4j.ConsoleAppender">
+    <param name="threshold" value="ERROR" />
+    <param name="target" value="System.err"/>
+    <param name="Encoding" value="UTF-8"/>
+    <layout class="org.apache.log4j.PatternLayout">
+      <!--Use short version of format because the log is shown inside pcd-launcher-->
+      <!--<param name="ConversionPattern" value="%d{yyyy/MM/dd HH:mm:ss} [%5p] %m%n" />-->
+      <param name="ConversionPattern" value="[%5p] %m%n" />
+    </layout>
+  </appender>
+
+  <!--When you want to write log to a separated file other than catalina.out, uncomment this part -->
+  <!--<appender name="fileout" class="org.apache.log4j.FileAppender">-->
+    <!--<param name="threshold" value="TRACE" />-->
+    <!--<param name="append" value="false" />-->
+    <!--<param name="file" value="scalavlet.log" />-->
+    <!--<param name="Encoding" value="UTF-8"/>-->
+    <!--<layout class="org.apache.log4j.PatternLayout">-->
+      <!--<param name="ConversionPattern" value="%d{yyyy/MM/dd HH:mm:ss} [%5p] %c{1} - %m%n" />-->
+    <!--</layout>-->
+    <!--<filter class="org.apache.log4j.varia.LevelRangeFilter">-->
+      <!--<param name="LevelMin" value="TRACE" />-->
+      <!--<param name="LevelMax" value="ERROR" />-->
+    <!--</filter>-->
+  <!--</appender>-->
+
+  <!--<category name="org.skife.jdbi.v2">-->
+    <!--<priority value="INFO" />-->
+  <!--</category>-->
+
+  <root>
+
+    <!--Change the priority for debugging-->
+    <!--TRACE, DEBUG, INFO, WARN, ERROR-->
+    <priority value="DEBUG" />
+
+    <appender-ref ref="stderr" />
+    <appender-ref ref="stdout" />
+    <!--<appender-ref ref="fileout" />-->
+  </root>
+
+</log4j:configuration>

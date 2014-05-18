@@ -4,7 +4,8 @@ import rl.UrlCodingUtils
 
 
 /**
- * copied from org.scalatra.ScalatraBase
+ *
+ * Derived from Scalatra
  */
 object UriDecoder {
   def firstStep(uri: String) =

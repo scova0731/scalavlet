@@ -1,7 +1,5 @@
 package org.scalavlet
 
-import org.scalavlet.utils.Loggable
-
 import javax.servlet.DispatcherType
 import javax.servlet.Filter
 import javax.servlet.ServletContext
@@ -10,6 +8,7 @@ import javax.servlet.http.HttpServlet
 import scala.reflect.ClassTag
 import java.net.URL
 import java.{util => ju}
+import com.typesafe.scalalogging.slf4j.LazyLogging
 
 /**
  * Defines a set of methods that a servlet uses to communicate with its
@@ -37,8 +36,7 @@ import java.{util => ju}
  * @see 	javax.servlet.ServletContext
  * @see   javax.servlet.ServletRegistration
  */
-class Context(c: ServletContext) extends Loggable {
-  private val logger = loggerOf[Context]
+class Context(c: ServletContext) extends LazyLogging {
 
   def underlying: ServletContext = c
 
@@ -85,23 +83,23 @@ class Context(c: ServletContext) extends Loggable {
 
 
   /**
-   * Mounts a handler to the servlet context.  Must be an HttpServlet or a
+   * Mounts a base to the servlet context.  Must be an HttpServlet or a
    * Filter.
    *
-   * @param handler the handler to mount
+   * @param base the base to mount
    *
    * @param urlPattern the URL pattern to mount.  Will be appended with `\/\*` if
    * not already, as path-mapping is the most natural fit for Scalatra.
    * If you don't want path mapping, use the native Servlet API.
    */
-  def mount(handler: Handler, urlPattern: String, loadOnStartup: Int = 1):Context = {
-    handler match {
+  def mount(base: ScalavletBase, urlPattern: String, loadOnStartup: Int = 1):Context = {
+    base match {
       case servlet: HttpServlet =>
         mountServlet(servlet, completeMapping(urlPattern), loadOnStartup)
       case filter: Filter =>
         mountFilter(filter, completeMapping(urlPattern))
       case _ =>
-        logger.error(handler.getClass.toString)
+        logger.error(base.getClass.toString)
     }
     this
   }

@@ -24,7 +24,8 @@ object Configuration {
     asScalaBufferConverter(l).asScala.map(converter).toList
 
   //TODO arrange reference.conf
-  val scalavletAsyncTimeout = config.getLong("scalavlet.async.timeout").getOrElse(60000L)
+  val scalavletDevelopment:Boolean = config.getBoolean("scalavlet.development").getOrElse(true) // TODO dev-mode should  be false ?
+  val scalavletAsyncTimeout:Long = config.getLong("scalavlet.async.timeout").getOrElse(60000L)
 }
 
 
@@ -33,7 +34,7 @@ object Configuration {
  *
  * The underlying implementation is provided by https://github.com/typesafehub/config.
  *
- * play.api.Configuration
+ * Derived from play.api.Configuration
  *
  * @param underlying the underlying Config implementation
  */

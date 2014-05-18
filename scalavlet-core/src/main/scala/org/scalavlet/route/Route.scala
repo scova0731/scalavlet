@@ -8,6 +8,8 @@ import org.scalavlet.utils.MultiParams
  * if all of its route matchers return Some. If a route matches, its action
  * may be invoked. The route parameters extracted by the matchers are made
  * available to the action.
+ *
+ * Derived from Scalatra
  */
 case class Route (
                   routeMatchers: Seq[RouteMatcher],
@@ -33,24 +35,16 @@ case class Route (
     } map { routeParams => MatchedRoute(action, routeParams) }
   }
 
-//  /**
-//   * The reversible matcher of a route is the first reversible matcher, if
-//   * any.  This matcher may be used to generate URIs.
-//   */
-//  lazy val reversibleMatcher: Option[RouteMatcher] =
-//    routeMatchers find (_.isInstanceOf[ReversibleRouteMatcher])
-//
-//  /**
-//   * Determines whether this is a reversible route.
-//   */
-//  lazy val isReversible: Boolean = !reversibleMatcher.isEmpty
 
   override def toString: String = routeMatchers mkString " "
 }
 
 
+/**
+ *
+ * Derived from Scalatra
+ */
 object Route {
-
 
   def apply(transformers: Seq[RouteTransformer], action: Action2): Route =
     apply(transformers, action, (_: Request) => "")
@@ -71,6 +65,8 @@ object Route {
 
 
 /**
-* An action and the multi-map of route parameters to invoke it with.
+ * An action and the multi-map of route parameters to invoke it with.
+ *
+ * Derived from Scalatra
 */
 case class MatchedRoute(action: Action2, multiParams: MultiParams)

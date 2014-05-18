@@ -10,28 +10,13 @@ import scala.collection.JavaConverters._
 /**
  * RouteRegistry keeps routes information, usually in each ScalavletServlet
  * Not context ? but servlet ?
+ *
+ * Derived from Scalatra
  */
 class RouteRegistry {
 
-//  private[this] val _statusRoutes: ConcurrentMap[Int, Route] =
-//    new ConcurrentHashMap[Int, Route].asScala
-
   private[this] val routes: ConcurrentMap[HttpMethod, Seq[Route]] =
     new ConcurrentHashMap[HttpMethod, Seq[Route]].asScala
-
-
-//  def apply(statusCode: Int): Option[Route] = _statusRoutes.get(statusCode)
-//
-//  /**
-//   * Add a route that explicitly matches one or more response codes.
-//   */
-//  def addStatusRoute(codes: Range, route: Route): Unit =
-//    codes.foreach { code => _statusRoutes.put(code, route) }
-
-
-
-
-
 
 
   /**

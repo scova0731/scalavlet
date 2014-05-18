@@ -2,17 +2,17 @@ package org.scalavlet
 
 import org.scalavlet.route.{Route, RouteTransformer, RouteRegistry, ImplicitRouteMatchers}
 import org.scalavlet.support.{BaseResponder, SessionSupport}
-import org.scalavlet.utils.{Loggable, StringHelpers}
-import org.slf4j.LoggerFactory
+import org.scalavlet.utils.StringHelpers
+
+import com.typesafe.scalalogging.slf4j.LazyLogging
 import javax.servlet.{ServletOutputStream, ServletContext}
-import javax.servlet.http.{HttpServletResponseWrapper, HttpServletResponse}
+import javax.servlet.http.{HttpServletRequest, HttpServletResponseWrapper, HttpServletResponse}
 
 import scala.collection.immutable.DefaultMap
 import scala.collection.JavaConverters._
+import scala.concurrent.ExecutionContext
 import java.util.zip.GZIPOutputStream
 import java.io.PrintWriter
-import scala.reflect.ClassTag
-import scala.concurrent.ExecutionContext
 
 //import reflectiveCalls for Config trait
 import scala.language.reflectiveCalls
@@ -23,10 +23,7 @@ import StringHelpers._
 trait ScalavletBase
   extends ImplicitRouteMatchers
   with SessionSupport
-  with Handler
-  with Loggable {
-
-  protected val logger = loggerOf[ScalavletBase]
+  with LazyLogging {
 
   protected def executionContext: ExecutionContext = ExecutionContext.Implicits.global
 
@@ -83,7 +80,7 @@ trait ScalavletBase
   /**
    * Handles a request and renders a response.
    */
-  override protected def handle(request: SvRequest, response: SvResponse) {
+  protected def handle(request: SvRequest, response: SvResponse) {
     val wRequest = new Request(request, response)
     val wResponse = new Response(response)
 

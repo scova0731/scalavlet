@@ -2,6 +2,10 @@ package org.scalavlet
 
 import javax.servlet.ServletContext
 
+/**
+ * Classes which extends this Bootable are detected
+ * by Servlet container in the initialization time
+ */
 trait Bootable {
 
   final def init(context: ServletContext) {

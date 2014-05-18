@@ -64,13 +64,12 @@ class BaseResponder (
     }
 
 
-  //TODO handle development mode
   private[scalavlet] def renderUncaughtException(e: Throwable):Unit = {
     response.setStatus(Status(500))
-    //if (isDevelopmentMode) {
-    response.setContentType(Some("text/plain"))
-    e.printStackTrace(response.writer)
-    //}
+    if (Configuration.scalavletDevelopment) {
+      response.setContentType(Some("text/plain"))
+      e.printStackTrace(response.writer)
+    }
   }
 
 

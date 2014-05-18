@@ -3,6 +3,7 @@ package org.scalavlet
 import org.scalavlet.support.Cookie
 import org.scalavlet.richer.ImplicitRichers
 
+import com.typesafe.scalalogging.slf4j.LazyLogging
 import javax.servlet.http.{Cookie => ServletCookie}
 import javax.servlet.ServletOutputStream
 
@@ -13,7 +14,7 @@ import java.io.PrintWriter
 /**
  *
  */
-class Response(r: SvResponse) extends ImplicitRichers {
+class Response(r: SvResponse) extends ImplicitRichers with LazyLogging {
 
   def underlying: SvResponse = r
 
@@ -29,19 +30,30 @@ class Response(r: SvResponse) extends ImplicitRichers {
   
   def setStatus(s:Int):Unit = setStatus(Status(s))
 
-  
-  def setStatus(statusLine: Status):Unit =
-    if (statusLine.isOk)
+
+  /**
+   *  Set the received status in the response
+   *
+   *  If renderError is true, it reads OutputStream and then automatically,
+   *  the OutputType is set to STREAM and getting writer will return
+   *  an IllegalStateException.
+
+   * @param statusLine
+   * @param renderError
+   */
+  def setStatus(statusLine: Status, renderError:Boolean = false):Unit =
+    if (!renderError)
       r.setStatus(statusLine.code)
     else
+      //This part reads OutputStream (OutputType becomes STREAM)
       r.sendError(statusLine.code, statusLine.message)
 
 
-  def addHeader(name:String, value:String): Unit = 
+  def addHeader(name:String, value:String): Unit =
     r.addHeader(name, value)
 
-  
-  def setHeader(name:String, value:String): Unit = 
+
+  def setHeader(name:String, value:String): Unit =
     r.setHeader(name, value)
 
 
@@ -81,10 +93,20 @@ class Response(r: SvResponse) extends ImplicitRichers {
     r.sendRedirect(uri)
 
 
+  /**
+   * Get the output stream
+   *
+   * CAUTION: Once this method is called, you cannot call "writer" method
+   */
   def outputStream: ServletOutputStream =
     r.getOutputStream
 
 
+  /**
+   * Get the print writer
+   *
+   * CAUTION: Once this method is called, you cannot call "outputStream" method
+   */
   def writer: PrintWriter =
     r.getWriter
 

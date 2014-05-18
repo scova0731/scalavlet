@@ -1,5 +1,9 @@
 package org.scalavlet
 
+import org.json4s._
+import org.json4s.jackson.JsonMethods._
+import org.json4s.jackson.JsonMethods
+
 case class Responser(status: Status, body: Any, headers: Map[String, String])
 
 private object Helpers {
@@ -10,6 +14,7 @@ private object Helpers {
 }
 
 import Helpers._
+
 
 object JsonOption extends Enumeration {
   val DOUBLE, BIGDECIMAL = Value
@@ -35,21 +40,25 @@ object Responding {
     Responser(status(200, ""), body, Map("Content-Type" -> "text/plain"))
 
 
-  def json(body: Any, option:JsonOption.Value = JsonOption.BIGDECIMAL):Responser = {
-    import org.json4s._
-    import org.json4s.jackson.JsonMethods._
-    import org.json4s.JsonDSL._
+  def json(body: Any,
+           option:JsonOption.Value = JsonOption.BIGDECIMAL,
+           pretty:Boolean = false):Responser = {
     implicit val formats = DefaultFormats
+
+    def renderJson =
+      if (pretty)
+        JsonMethods.pretty(render(Extraction.decompose(body)))
+      else
+        compact(render(Extraction.decompose(body)))
+
 
     val renderedBody = option match {
       case JsonOption.BIGDECIMAL =>
         import org.json4s.JsonDSL.WithBigDecimal._
-        //r:Response => mapper.writeValue(r.writer, body)  //
-        compact(render(Extraction.decompose(body)))
+        renderJson
       case JsonOption.DOUBLE =>
         import org.json4s.JsonDSL.WithDouble._
-        //r:Response => mapper.writeValue(r.writer, body) //compact(render(body))
-        compact(render(Extraction.decompose(body)))
+        renderJson
 
     }
 

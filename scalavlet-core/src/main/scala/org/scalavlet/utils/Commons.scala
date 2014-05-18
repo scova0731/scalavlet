@@ -7,6 +7,10 @@ import java.nio.channels.Channels
 // This is added based on the advise of compiler warning
 import scala.language.reflectiveCalls
 
+/**
+ *
+ * Derived from Scalatra
+ */
 object Commons {
 
   /**

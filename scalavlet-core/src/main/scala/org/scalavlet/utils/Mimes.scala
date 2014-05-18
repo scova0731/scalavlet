@@ -9,6 +9,10 @@ import java.net.{URI, URL}
 import scala.collection.JavaConversions._
 import org.slf4j.LoggerFactory
 
+/**
+ *
+ * Derived from Scalatra
+ */
 object Mimes {
 
   val DefaultMime = "application/octet-stream"
@@ -31,6 +35,8 @@ object Mimes {
 
 /**
  * A utility to help with mime type detection for a given file path or url
+ *
+ * Derived from Scalatra
  */
 trait Mimes {
   import Mimes._

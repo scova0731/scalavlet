@@ -7,7 +7,7 @@ import scala.language.implicitConversions
 
 
 /**
- * Separated from ScalatraBase
+ * Derived from Scalatra
  */
 trait ImplicitRouteMatchers {
 

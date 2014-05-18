@@ -64,8 +64,8 @@ Roadmap
 - No xml configuration : DONE
 - Integrated JSON input and output : DONE
 - Integrated Typesafe/Config configuration : DONE
-- Async feature integration : DONE
-- Logging
+- Servlet async feature integration with Future : DONE
+- Logging with scala-logging : DONE
 - Sample application
 - Refactoring and testing
 

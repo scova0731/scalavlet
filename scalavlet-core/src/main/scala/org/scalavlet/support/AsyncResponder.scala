@@ -1,7 +1,7 @@
 package org.scalavlet.support
 
 import org.scalavlet._
-import org.scalavlet.utils.Loggable
+import com.typesafe.scalalogging.slf4j.LazyLogging
 
 import javax.servlet.{AsyncEvent, AsyncListener}
 
@@ -51,9 +51,7 @@ trait AsyncResponder {
 
 
 class LoggingAsyncListener(request:Request, response:Response)
-  extends AsyncListener with Loggable {
-
-  val logger = loggerOf[LoggingAsyncListener]
+  extends AsyncListener with LazyLogging {
 
   override def onStartAsync (event: AsyncEvent): Unit = {
     logger.debug(s"Async processing started for ${request.servletPath}")

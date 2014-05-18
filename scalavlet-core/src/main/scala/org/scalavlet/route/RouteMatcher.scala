@@ -161,6 +161,10 @@ final class BooleanBlockRouteMatcher(block: => Boolean) extends RouteMatcher {
   override def toString = "[Boolean Guard]"
 }
 
+/**
+ *
+ * Derived from Scalatra
+ */
 final class StatusCodeRouteMatcher(codes: Range, responseStatus: => Int)  extends RouteMatcher {
 
   def apply(requestPath: String) = if(codes.contains(responseStatus)) Some(MultiParams()) else None

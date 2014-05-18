@@ -7,6 +7,10 @@ import java.nio.charset.Charset
 
 import org.scalavlet.utils.Commons._
 
+/**
+ *
+ * Derived from Scalatra
+ */
 object FileCharset {
 
   //@transient private[this] val logger: Logger = Logger(getClass)

@@ -1,9 +1,11 @@
 package org.scalavlet
 
-import scala.collection.JavaConverters._
 import javax.servlet.annotation.HandlesTypes
 import javax.servlet.{ServletException, ServletContext, ServletContainerInitializer}
+
+import scala.collection.JavaConverters._
 import java.lang.reflect.Modifier
+
 import java.{util => ju}
 
 /**

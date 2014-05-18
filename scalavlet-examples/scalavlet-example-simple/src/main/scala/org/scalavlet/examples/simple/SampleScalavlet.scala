@@ -1,7 +1,7 @@
 package org.scalavlet.examples.simple
 
 import scala.xml.{Node, Text}
-import org.scalavlet.{Request, Scalavlet}
+import org.scalavlet.{NotFound, Request, Scalavlet}
 
 object Template {
 
@@ -67,7 +67,7 @@ object PageServlet extends Scalavlet {
   }
 
   get("/not-found") { request =>
-    respond S404_NotFound "Oops"
+    NotFound("Oops")
   }
 
   get("/date/:year/:month/:day") { request =>

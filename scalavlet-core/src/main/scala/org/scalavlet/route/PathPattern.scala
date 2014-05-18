@@ -7,6 +7,8 @@ import org.scalavlet.utils.MultiParams
 /**
  * A path pattern optionally matches a request path and extracts path
  * parameters.
+ *
+ * Derived from Scalatra
  */
 case class PathPattern(regex: Regex, captureGroupNames: List[String] = Nil) {
   def genMap(path: String): Option[MultiParams] = { //Option[MultiParams] = {
@@ -26,21 +28,23 @@ case class PathPattern(regex: Regex, captureGroupNames: List[String] = Nil) {
       Some(multiParams)
     } else None
   }
-
-//  def +(pathPattern: PathPattern): PathPattern = PathPattern(
-//    new Regex(this.regex.toString + pathPattern.regex.toString),
-//    this.captureGroupNames ::: pathPattern.captureGroupNames
-//  )
 }
+
 
 /**
  * Parses a string into a path pattern for routing.
+ *
+ * Derived from Scalatra
  */
 trait PathPatternParser {
   def parse(pattern: String): PathPattern
 }
 
 
+/**
+ *
+ * Derived from Scalatra
+ */
 trait RegexPathPatternParser extends PathPatternParser with RegexParsers {
   /**
    * This parser gradually builds a regular expression.  Some intermediate
@@ -57,8 +61,11 @@ trait RegexPathPatternParser extends PathPatternParser with RegexParsers {
   }
 }
 
+
 /**
  * A Sinatra-compatible route path pattern parser.
+ *
+ * Derived from Scalatra
  */
 class SinatraPathPatternParser extends RegexPathPatternParser {
   def parse(pattern: String): PathPattern =
@@ -86,6 +93,11 @@ class SinatraPathPatternParser extends RegexPathPatternParser {
   private def normalChar = ".".r ^^ { c => PartialPathPattern(c) }
 }
 
+
+/**
+ *
+ * Derived from Scalatra
+ */
 object SinatraPathPatternParser {
   def parse(pattern: String): PathPattern = new SinatraPathPatternParser().parse(pattern)
 }
