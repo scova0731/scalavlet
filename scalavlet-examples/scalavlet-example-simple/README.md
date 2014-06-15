@@ -36,5 +36,12 @@ If you want to debug in your IDE, `export` maven option before `jetty:run`
 
 You might want to see the details. Please add the verbose: `-v` option.
 
+### MoreJsonScalavlet
+
+TODO
+
+### FutureScalavlet
+
+    curl -X GET http://localhost:8080/future/slow
 
 ### PageScalavlet

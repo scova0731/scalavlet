@@ -3,6 +3,7 @@ package org
 import scala.annotation.implicitNotFound
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import scala.util.Try
+import org.scalavlet.utils.Params
 
 
 package object scalavlet {
@@ -22,6 +23,7 @@ package object scalavlet {
 
   type Action = () => Any
   type Action2 = Request => Any
+  type Action3 = (Request, Params) => Any
   type ResponseAction = Response => Any
 
 

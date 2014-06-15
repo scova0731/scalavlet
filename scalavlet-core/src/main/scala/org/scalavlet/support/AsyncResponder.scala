@@ -8,6 +8,7 @@ import javax.servlet.{AsyncEvent, AsyncListener}
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Success
 import scala.util.Failure
+import java.util.concurrent.atomic.AtomicBoolean
 
 
 trait AsyncResponder {
@@ -24,16 +25,24 @@ trait AsyncResponder {
    */
   protected def asyncRenderPipeline(): PartialFunction[Any, Any] = {
     case future:Future[Any] =>
+
+      /**
+       * This flag is used for the detection of unexpected completeness by timeout and error
+       */
+      val isCompleted = new AtomicBoolean(false)
+
       val context = request.underlying.startAsync()
       context.setTimeout(Configuration.scalavletAsyncTimeout)
-      context.addListener(new LoggingAsyncListener(request, response))
+      context.addListener(new LoggingAsyncListener(request, isCompleted))
 
       future.onComplete {
         case Success(v) =>
           try {
             renderResponseBody(v)
           } finally {
-            context.complete()
+            if(isCompleted.compareAndSet(false, true)) {
+              context.complete()
+            }
           }
         case Failure(e) =>
           throw new ScalavletAsyncException(e)
@@ -50,24 +59,27 @@ trait AsyncResponder {
 }
 
 
-class LoggingAsyncListener(request:Request, response:Response)
+class LoggingAsyncListener(request:Request, isCompleted:AtomicBoolean)
   extends AsyncListener with LazyLogging {
 
   override def onStartAsync (event: AsyncEvent): Unit = {
-    logger.debug(s"Async processing started for ${request.servletPath}")
+    logger.debug(s"Async processing started for ${request.requestURI}")
   }
 
   override def onError (event: AsyncEvent): Unit = {
-    logger.debug(s"Async processing finished with an error in ${request.servletPath}")
+    logger.debug(s"Async processing finished with an error in ${request.requestURI}")
+    isCompleted.set(true)
+    event.getAsyncContext.complete()
   }
 
-  //TODO complete timeout handling for async process
   override def onTimeout (event: AsyncEvent): Unit = {
+    logger.warn(s"Async processing timed out for ${request.requestURI}")
+    isCompleted.set(true)
     event.getAsyncContext.complete()
-    logger.warn(s"Async processing timed out for ${request.servletPath}")
   }
 
   override def onComplete (event: AsyncEvent): Unit = {
-    logger.debug(s"Async processing completed for ${request.servletPath}")
+    isCompleted.set(true)
+    logger.debug(s"Async processing completed for ${request.requestURI}")
   }
 }

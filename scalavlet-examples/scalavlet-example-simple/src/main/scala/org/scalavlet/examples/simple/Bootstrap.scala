@@ -10,6 +10,7 @@ class Bootstrap extends Bootable {
   override def onStart (context: Context): Unit = {
     context.mount(PageServlet, "/")
     context.mount(RestScalavlet, "/rest")
+    context.mount(FutureScalavlet, "/future")
   }
 
   override def onStop (context: Context): Unit = {

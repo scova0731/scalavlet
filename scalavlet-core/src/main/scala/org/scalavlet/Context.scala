@@ -127,6 +127,7 @@ class Context(c: ServletContext) extends LazyLogging {
   private def mountServlet(servlet: HttpServlet, urlPattern: String, loadOnStartup: Int):Unit = {
     val reg = Option(c.getServletRegistration(servlet.getClass.getName)) getOrElse {
       val r = c.addServlet(servlet.getClass.getName, servlet)
+      r.setAsyncSupported(true)
       r.setLoadOnStartup(loadOnStartup)
       r
     }
@@ -138,6 +139,7 @@ class Context(c: ServletContext) extends LazyLogging {
     val name = servletClass.getName
     val reg = Option(c.getServletRegistration(name)) getOrElse {
       val r = c.addServlet(name, servletClass)
+      r.setAsyncSupported(true)
       r.setLoadOnStartup(loadOnStartup)
       r
     }
