@@ -16,8 +16,19 @@ object FutureScalavlet extends Scalavlet with LazyLogging {
    */
   get("/slow-async"){ request =>
     future {
-      Thread.sleep(1000)
-      "Response After 1000 ms !"
+      Thread.sleep(500)
+      "Response After 500 ms !"
+    }
+  }
+
+
+  /**
+   * This should raise timeout exception
+   */
+  get("/slow-async-error"){ request =>
+    future {
+      Thread.sleep(1100)
+      "Response After 1100 ms !"
     }
   }
 
@@ -28,9 +39,9 @@ object FutureScalavlet extends Scalavlet with LazyLogging {
   get("/slow-await"){ request =>
     Await.result(
       Future {
-        Thread.sleep(1000)
-        "Response After 1000 ms !"
+        Thread.sleep(1100)
+        "Response After 1100 ms !"
       },
-      1 second)
+      2 seconds)
   }
 }
